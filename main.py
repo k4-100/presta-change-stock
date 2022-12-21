@@ -1,7 +1,7 @@
 import mysql.connector 
 from pprint import pprint
 
-def perform_connection(db_info):
+def fetch_table(db_info):
     '''
 
     '''
@@ -13,10 +13,12 @@ def perform_connection(db_info):
     )
     cur = cnx.cursor()
     cur.execute('SELECT * FROM ps_stock_available')
-    row = cur.fetchall()
-    pprint(row)
+    table = cur.fetchall()
     
     cnx.close()
+    
+
+    return table
 
 
 def main():
@@ -27,7 +29,7 @@ def main():
         "database": "prestashop_1_6"
     }
 
-    perform_connection(db_info)
+    pprint( fetch_table(db_info) )
 
 
 if __name__ == '__main__':
