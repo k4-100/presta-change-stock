@@ -8,13 +8,16 @@ AND ps_product.reference = "food_2";
 '''
 
 
-queryChange = lambda x : f'''
-UPDATE ps_stock_available
-SET ps_stock_available.quantity = {x}
-WHERE ps_stock_available.id_product =  ps_product.id_product
+queryChange = lambda new_stock : f'''
+UPDATE ps_stock_available, ps_product
+SET ps_stock_available.quantity = {new_stock}
+WHERE ps_stock_available.id_product = ps_product.id_product
 AND ps_product.reference = "food_2";
 '''
-
+# UPDATE ps_stock_available, ps_product 
+# SET ps_stock_available.quantity = 9999 
+# WHERE ps_stock_available.id_product = ps_product.id_product 
+# AND ps_product.reference = "food_2;
 
 
 def fetch_table(db_info):
@@ -32,8 +35,9 @@ def fetch_table(db_info):
     )
     cur = cnx.cursor()
     cur.execute(queryFetch)
-    table = cur.fetchall
+    table = cur.fetchall()
     
+    cur.close()
     cnx.close()
 
     return table
@@ -53,7 +57,8 @@ def change_table(db_info, value):
     )
     cur = cnx.cursor()
     cur.execute(queryChange(value))
-    
+    cnx.commit()
+    cur.close()
     cnx.close()
 
 
@@ -67,7 +72,9 @@ def main():
         "database": "prestashop_1_6"
     }
     
-    fetch_table(db_info)
+    change_table(db_info, 4567)
+
+    # fetch_table(db_info)
 
 
 if __name__ == '__main__':
